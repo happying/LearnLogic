@@ -36,6 +36,26 @@ func threeSum_V2(nums []int) [][]int {
 		return results
 	}
 	sort.Ints(nums)
+	// 为增加效率，针对某些极端情况做出额外处理
+	minNum := nums[0] + nums[1] + nums[2]
+	if minNum > 0 {
+		// 最小的三个数相加都大于0了，没必要处理
+		return results
+	}
+	if minNum == 0 {
+		// 最小的三个数相加等于0了，那么也就意味着最小的第一个和第二个结合的最小的数，已经匹配到对的数了，剩下的那个数字必然固定，和它一样的不符合条件，和他不一样的一定比那个数大
+		return [][]int{[]int{nums[0], nums[1], nums[2]}}
+	}
+	maxNum := nums[length-1] + nums[length-2] + nums[length-3]
+	if maxNum < 0 {
+		// 最大的3个数相加都小于0了，没必要处理了
+		return results
+	}
+	if maxNum == 0 {
+		// 最大的三个数相加等于0了，那么也就意味着最小的第一个和第二个结合的最小的数，已经匹配到对的数了，剩下的那个数字必然固定，和它一样的不符合条件，和他不一样的一定比那个数大
+		return [][]int{[]int{nums[length-1], nums[length-2], nums[length-3]}}
+	}
+
 	for i := 0; i <= length-3; i++ {
 		num_i := nums[i]
 		if i > 0 && num_i == nums[i-1] {
