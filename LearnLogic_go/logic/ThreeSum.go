@@ -1,8 +1,10 @@
 package logic
 
 import (
+	"fmt"
 	"sort"
 	"strconv"
+	"time"
 )
 
 /*
@@ -12,14 +14,22 @@ import (
 */
 
 func TestThreeSum() {
-	nums := []int{0, 0, 0, 0}
+	nums := BigLengthIntArr
+	//nums := []int{0, 0, 0, 0}
 	//nums := []int{-1, 0, 1, 2, -1, -4}
-	resultMap := threeSum(nums)
-	println(resultMap)
+	start := time.Now()
+	resultMap := threeSum_V1(nums)
+	end := time.Now()
+	cost := end.Sub(start)
+	fmt.Printf("函数执行耗时：%v \n", cost)
+	fmt.Printf("结果：%v \n", len(resultMap))
+
 }
 
 func threeSum(nums []int) [][]int {
 	var results [][]int
+	jump1 := 0
+	jump2 := 0
 	sort.Ints(nums)
 	for i := 0; i < len(nums)-2; i++ {
 		if i > 0 && nums[i] == nums[i-1] { // 跳过重复元素
@@ -33,9 +43,11 @@ func threeSum(nums []int) [][]int {
 				j++
 				k--
 				for j < k && nums[j] == nums[j-1] { // 跳过重复元素
+					jump1++
 					j++
 				}
 				for j < k && nums[k] == nums[k+1] { // 跳过重复元素
+					jump2++
 					k--
 				}
 			} else if sum < 0 {
@@ -45,6 +57,8 @@ func threeSum(nums []int) [][]int {
 			}
 		}
 	}
+	fmt.Printf("a: %v b: %v", jump1, jump2)
+
 	return results
 }
 
@@ -52,13 +66,24 @@ func threeSum(nums []int) [][]int {
 func threeSum_V1(nums []int) [][]int {
 	resultMap := map[string][]int{}
 	numMap := map[string][]int{}
-	sort.Ints(nums)
+	//sort.Ints(nums)
+	totalCost := time.Duration(0)
 	for index, num := range nums {
+
+		start := time.Now()
 		target := 0 - num
-		tmpMap, tmpNumMap := twoSum(nums, target, index, num, numMap)
-		resultMap = mergeMaps(resultMap, tmpMap)
-		numMap = mergeMaps(numMap, tmpNumMap)
+		twoSum(nums, target, index, num, &numMap, &resultMap)
+
+		end := time.Now()
+		cost := end.Sub(start)
+		//fmt.Printf("函数阶段:%v 执行耗时：%v \n", index, cost)
+		totalCost = totalCost + cost
+
+		// merge map 的操作有非常非常巨大的耗时，不要偷懒，直接使用指针传递
+		//resultMap = mergeMaps(resultMap, tmpMap)
+		//numMap = mergeMaps(numMap, tmpNumMap)
 	}
+	fmt.Printf("函数循环平均执行耗时：%v \n", time.Duration(int(totalCost)/len(nums)))
 
 	resultArr := [][]int{}
 	for _, ints := range resultMap {
@@ -68,32 +93,28 @@ func threeSum_V1(nums []int) [][]int {
 	return resultArr
 }
 
-func twoSum(nums []int, target int, thirdId int, thirdNum int, thirdNumMap map[string][]int) (map[string][]int, map[string][]int) {
+func twoSum(nums []int, target int, thirdId int, thirdNum int, thirdNumMap *map[string][]int, resultMap *map[string][]int) {
 	numMap := map[int]int{}
-	resultMap := map[string][]int{}
 
 	for index := thirdId + 1; index < len(nums); index++ {
 		num := nums[index]
 		num2 := target - num
-		for index2 := index + 1; index2 < len(nums); index2++ {
+		if index2, ok := numMap[num2]; ok {
 			if index == index2 || index == thirdId || index2 == thirdId {
 				continue
 			}
 
-			// 将index从小到大排序，并生成string作为key，避免重复
 			key := mapKey(index, index2, thirdId)
-			if _, ok := resultMap[key]; !ok {
+			if _, ok := (*resultMap)[key]; !ok {
 				numMapKey := mapKey(num, num2, thirdNum)
-				if _, ok := thirdNumMap[numMapKey]; !ok {
-					resultMap[key] = []int{num, num2, thirdNum}
+				if _, ok := (*thirdNumMap)[numMapKey]; !ok {
+					(*resultMap)[key] = []int{num, num2, thirdNum}
 				}
-				thirdNumMap[numMapKey] = []int{}
+				(*thirdNumMap)[numMapKey] = []int{}
 			}
 		}
 		numMap[num] = index
 	}
-
-	return resultMap, thirdNumMap
 }
 
 func mergeMaps(m1, m2 map[string][]int) map[string][]int {
@@ -107,6 +128,7 @@ func mergeMaps(m1, m2 map[string][]int) map[string][]int {
 	for k, v := range m2 {
 		merged[k] = v
 	}
+
 	return merged
 }
 
