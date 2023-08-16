@@ -14,9 +14,10 @@ import (
 */
 
 func TestThreeSum() {
-	nums := BigLengthZeroIntArr
+	//nums := BigLengthIntArr
+	//nums := BigLengthZeroIntArr
 	//nums := []int{0, 0, 0, 0}
-	//nums := []int{-1, 0, 1, 2, -1, -4}
+	nums := []int{-1, 0, 1, 2, -1, -4}
 	start := time.Now()
 	resultMap := threeSum_V1(nums)
 	end := time.Now()
@@ -70,7 +71,7 @@ func threeSum_V1(nums []int) [][]int {
 	length := len(nums)
 	resultArr := [][]int{}
 
-	//sort.Ints(nums)
+	sort.Ints(nums)
 	for index := 0; index < length; index++ {
 		num := nums[index]
 		if index != 0 && nums[index-1] == num {
@@ -80,9 +81,9 @@ func threeSum_V1(nums []int) [][]int {
 		//twoSum(nums, target, index, num, &existsNumMap, &resultMap, &numMap)
 		for index2 := index + 1; index2 < length; index2++ {
 			num2 := nums[index2]
-			if nums[index2-1] == num2 {
-				continue
-			}
+			//if nums[index2-1] == num2 {
+			//	continue
+			//}
 			num3 := target - num2
 			if index3, ok := numMap[num3]; ok {
 				if index2 == index3 || index3 == index {
