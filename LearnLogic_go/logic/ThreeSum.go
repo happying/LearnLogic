@@ -14,7 +14,7 @@ import (
 */
 
 func TestThreeSum() {
-	nums := BigLengthIntArr
+	nums := BigLengthZeroIntArr
 	//nums := []int{0, 0, 0, 0}
 	//nums := []int{-1, 0, 1, 2, -1, -4}
 	start := time.Now()
@@ -57,7 +57,7 @@ func threeSum(nums []int) [][]int {
 			}
 		}
 	}
-	fmt.Printf("a: %v b: %v", jump1, jump2)
+	fmt.Printf("a: %v b: %v \n", jump1, jump2)
 
 	return results
 }
@@ -65,71 +65,69 @@ func threeSum(nums []int) [][]int {
 ////////////////////////
 func threeSum_V1(nums []int) [][]int {
 	resultMap := map[string][]int{}
-	numMap := map[string][]int{}
-	//sort.Ints(nums)
-	totalCost := time.Duration(0)
-	for index, num := range nums {
-
-		start := time.Now()
-		target := 0 - num
-		twoSum(nums, target, index, num, &numMap, &resultMap)
-
-		end := time.Now()
-		cost := end.Sub(start)
-		//fmt.Printf("函数阶段:%v 执行耗时：%v \n", index, cost)
-		totalCost = totalCost + cost
-
-		// merge map 的操作有非常非常巨大的耗时，不要偷懒，直接使用指针传递
-		//resultMap = mergeMaps(resultMap, tmpMap)
-		//numMap = mergeMaps(numMap, tmpNumMap)
-	}
-	fmt.Printf("函数循环平均执行耗时：%v \n", time.Duration(int(totalCost)/len(nums)))
-
+	existsNumMap := map[string][]int{}
+	numMap := map[int]int{}
+	length := len(nums)
 	resultArr := [][]int{}
-	for _, ints := range resultMap {
-		resultArr = append(resultArr, ints)
+
+	//sort.Ints(nums)
+	for index := 0; index < length; index++ {
+		num := nums[index]
+		if index != 0 && nums[index-1] == num {
+			continue
+		}
+		target := 0 - num
+		//twoSum(nums, target, index, num, &existsNumMap, &resultMap, &numMap)
+		for index2 := index + 1; index2 < length; index2++ {
+			num2 := nums[index2]
+			if nums[index2-1] == num2 {
+				continue
+			}
+			num3 := target - num2
+			if index3, ok := numMap[num3]; ok {
+				if index2 == index3 || index3 == index {
+					continue
+				}
+				key := mapKey(index2, index3, index)
+				if _, ok := resultMap[key]; !ok {
+					numMapKey := mapKey(num2, num3, num)
+					if _, ok := existsNumMap[numMapKey]; !ok {
+						singleArr := []int{num2, num3, num}
+						resultMap[key] = singleArr
+						resultArr = append(resultArr, singleArr)
+					}
+					existsNumMap[numMapKey] = []int{}
+				}
+			}
+			numMap[num2] = index2
+		}
 	}
 
 	return resultArr
 }
 
-func twoSum(nums []int, target int, thirdId int, thirdNum int, thirdNumMap *map[string][]int, resultMap *map[string][]int) {
-	numMap := map[int]int{}
-
-	for index := thirdId + 1; index < len(nums); index++ {
-		num := nums[index]
-		num2 := target - num
-		if index2, ok := numMap[num2]; ok {
-			if index == index2 || index == thirdId || index2 == thirdId {
+func twoSum(nums []int, target int, thirdId int, thirdNum int, existsNumMap *map[string][]int, resultMap *map[string][]int, numMap *map[int]int) {
+	//numMap := map[int]int{}
+	length := len(nums)
+	for index2 := thirdId + 1; index2 < length; {
+		num2 := nums[index2]
+		num3 := target - num2
+		if index3, ok := (*numMap)[num3]; ok {
+			if index2 == index3 || index3 == thirdId {
 				continue
 			}
 
-			key := mapKey(index, index2, thirdId)
+			key := mapKey(index2, index3, thirdId)
 			if _, ok := (*resultMap)[key]; !ok {
-				numMapKey := mapKey(num, num2, thirdNum)
-				if _, ok := (*thirdNumMap)[numMapKey]; !ok {
-					(*resultMap)[key] = []int{num, num2, thirdNum}
+				numMapKey := mapKey(num2, num3, thirdNum)
+				if _, ok := (*existsNumMap)[numMapKey]; !ok {
+					(*resultMap)[key] = []int{num2, num3, thirdNum}
 				}
-				(*thirdNumMap)[numMapKey] = []int{}
+				(*existsNumMap)[numMapKey] = []int{}
 			}
 		}
-		numMap[num] = index
+		(*numMap)[num2] = index2
 	}
-}
-
-func mergeMaps(m1, m2 map[string][]int) map[string][]int {
-	// 创建一个新的map，用于存放合并后的结果
-	merged := make(map[string][]int)
-	// 先将第一个map中的键值对添加到merged中
-	for k, v := range m1 {
-		merged[k] = v
-	}
-	// 再将第二个map中的键值对添加到merged中
-	for k, v := range m2 {
-		merged[k] = v
-	}
-
-	return merged
 }
 
 func mapKey(a, b, c int) string {
@@ -145,6 +143,21 @@ func mapKey(a, b, c int) string {
 	}
 
 	return str
+}
+
+func mergeMaps(m1, m2 map[string][]int) map[string][]int {
+	// 创建一个新的map，用于存放合并后的结果
+	merged := make(map[string][]int)
+	// 先将第一个map中的键值对添加到merged中
+	for k, v := range m1 {
+		merged[k] = v
+	}
+	// 再将第二个map中的键值对添加到merged中
+	for k, v := range m2 {
+		merged[k] = v
+	}
+
+	return merged
 }
 
 func min(a, b, c int) int {
