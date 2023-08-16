@@ -1,5 +1,7 @@
 package main
 
-func main() {
+import "LearnLogic/logic"
 
+func main() {
+	logic.TestThreeSum()
 }
