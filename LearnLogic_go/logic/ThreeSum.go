@@ -19,7 +19,7 @@ func TestThreeSum() {
 	//nums := []int{0, 0, 0, 0}
 	nums := []int{-1, 0, 1, 2, -1, -4}
 	start := time.Now()
-	resultMap := threeSum_V1(nums)
+	resultMap := threeSum_V2(nums)
 	end := time.Now()
 	cost := end.Sub(start)
 	fmt.Printf("函数执行耗时：%v \n", cost)
@@ -27,29 +27,40 @@ func TestThreeSum() {
 
 }
 
-func threeSum(nums []int) [][]int {
+/////////////////////
+
+func threeSum_V2(nums []int) [][]int {
 	var results [][]int
-	jump1 := 0
-	jump2 := 0
+	var length = len(nums)
+	if length < 3 {
+		return results
+	}
 	sort.Ints(nums)
-	for i := 0; i < len(nums)-2; i++ {
-		if i > 0 && nums[i] == nums[i-1] { // 跳过重复元素
+	for i := 0; i <= length-3; i++ {
+		num_i := nums[i]
+		if i > 0 && num_i == nums[i-1] {
 			continue
 		}
-		j, k := i+1, len(nums)-1
+		k := length - 1
+		j := i + 1
 		for j < k {
-			sum := nums[i] + nums[j] + nums[k]
+			num_j := nums[j]
+			num_k := nums[k]
+			sum := num_j + num_k + num_i
 			if sum == 0 {
-				results = append(results, []int{nums[i], nums[j], nums[k]})
-				j++
-				k--
-				for j < k && nums[j] == nums[j-1] { // 跳过重复元素
-					jump1++
-					j++
+				results = append(results, []int{num_i, num_j, num_k})
+				for j = j + 1; j < k; j++ {
+					if nums[j-1] != nums[j] {
+						break
+					}
 				}
-				for j < k && nums[k] == nums[k+1] { // 跳过重复元素
-					jump2++
-					k--
+				for k = k - 1; k > j; k-- {
+					if j >= k {
+						break
+					}
+					if nums[k+1] != nums[k] {
+						break
+					}
 				}
 			} else if sum < 0 {
 				j++
@@ -58,7 +69,6 @@ func threeSum(nums []int) [][]int {
 			}
 		}
 	}
-	fmt.Printf("a: %v b: %v \n", jump1, jump2)
 
 	return results
 }
@@ -107,6 +117,21 @@ func threeSum_V1(nums []int) [][]int {
 	return resultArr
 }
 
+func mapKey(a, b, c int) string {
+	arr := []int{a, b, c}
+	sort.Ints(arr)
+	str := ""
+	for _, num := range arr {
+		if str == "" {
+			str = strconv.Itoa(num)
+			continue
+		}
+		str = str + "_" + strconv.Itoa(num)
+	}
+
+	return str
+}
+
 func twoSum(nums []int, target int, thirdId int, thirdNum int, existsNumMap *map[string][]int, resultMap *map[string][]int, numMap *map[int]int) {
 	//numMap := map[int]int{}
 	length := len(nums)
@@ -129,21 +154,6 @@ func twoSum(nums []int, target int, thirdId int, thirdNum int, existsNumMap *map
 		}
 		(*numMap)[num2] = index2
 	}
-}
-
-func mapKey(a, b, c int) string {
-	arr := []int{a, b, c}
-	sort.Ints(arr)
-	str := ""
-	for _, num := range arr {
-		if str == "" {
-			str = strconv.Itoa(num)
-			continue
-		}
-		str = str + "_" + strconv.Itoa(num)
-	}
-
-	return str
 }
 
 func mergeMaps(m1, m2 map[string][]int) map[string][]int {
