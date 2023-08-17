@@ -30,7 +30,7 @@ func threeSumClosest(nums []int, target int) int {
 		num_j := nums[j]
 		num_k := nums[k]
 		if i == 0 {
-			result = num_i - nums[j] - nums[k]
+			result = num_i + nums[j] + nums[k]
 			resultDiff = target - result
 			if resultDiff == 0 {
 				return result
@@ -52,6 +52,7 @@ func threeSumClosest(nums []int, target int) int {
 			if tmpAbs < resultAbs {
 				resultDiff = tmpResultDiff
 				resultAbs = tmpAbs
+				result = tmpResult
 			}
 			if tmpResultDiff > 0 {
 				j++
