@@ -82,3 +82,26 @@ func canCompleteCircuit_v1(gas []int, cost []int) int {
 
 	return -1
 }
+
+/*
+	来源于最佳答案，仔细思考一下，这个解法在原解法的基础上，更近一步优化了
+	优化来源于总量控制，一个二分的思想，如果总油数小于总消耗数，则必然无解，反之则必然有解
+	则 if totalSum < 0 判断总数是否充足，在总数充足的情况下，只需要找到某一个起点，其一直到终点为止的汽油都足够(递归反证，如果前半段还存在幺儿子，那么此题必然无解，无解的话与第一个判断的结论相悖，所以必然有解，则找出的第一个到终点仍然够油耗的节点则为解)
+*/
+func canCompleteCircuit_from_result(gas []int, cost []int) int {
+	totalSum := 0
+	start := 0
+	curSum := 0
+	for i := 0; i < len(gas); i++ {
+		curSum += gas[i] - cost[i]   // 当前油-到下一个的油
+		totalSum += gas[i] - cost[i] // 这个是总体的油
+		if curSum < 0 {
+			start = i + 1 // 因为当前油不足以支持以该加油站为起点，必须靠totalSum支撑
+			curSum = 0    // 还原
+		}
+	}
+	if totalSum < 0 {
+		return -1
+	}
+	return start
+}
