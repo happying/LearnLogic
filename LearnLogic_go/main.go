@@ -6,6 +6,6 @@ func main() {
 	//logic.TestThreeSum()
 	//logic.TestThreeSumClosest()
 	//logic.TimeCost(logic.TestGas)
-	logic.TimeCost(logic.TestIsSubsequence)
-
+	//logic.TimeCost(logic.TestIsSubsequence)
+	logic.TestNumIslands()
 }
