@@ -67,6 +67,35 @@ func TestNumIslands() {
 func numIslands(grid [][]byte) int {
 	iLength := len(grid)
 	jLength := len(grid[0])
+
+	var dfs func(i, j int)
+	dfs = func(i, j int) {
+		if i < 0 || j < 0 || i >= iLength || j >= jLength || grid[i][j] != '1' {
+			return
+		}
+		grid[i][j] = '2'
+		dfs(i+1, j)
+		dfs(i-1, j)
+		dfs(i, j+1)
+		dfs(i, j-1)
+	}
+
+	totalCount := 0
+	for i := 0; i < iLength; i++ {
+		for j := 0; j < jLength; j++ {
+			if grid[i][j] == '1' {
+				totalCount++
+				dfs(i, j)
+			}
+		}
+	}
+
+	return totalCount
+}
+
+func numIslands_v1(grid [][]byte) int {
+	iLength := len(grid)
+	jLength := len(grid[0])
 	totalCacheMap := map[int]int{}
 	totalCount := 0
 	for i := 0; i < iLength; i++ {
