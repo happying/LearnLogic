@@ -41,6 +41,24 @@ positions[i].length == 2
 进阶：你可以设计一个时间复杂度 O(k log(mn)) 的算法解决此问题吗？（其中 k == positions.length）
 */
 
+func TestNumIslands2() {
+	a := [][]int{}
+	//a = [][]int{{0, 0}, {0, 1}, {1, 2}, {2, 1}}
+	jsonStr := "[[0,1],[1,2],[2,1],[1,0],[0,2],[0,0],[1,1]]" // 对应结果：[1,2,3,4,3,2,1]
+
+	//jsonStr = "[[0,0],[0,1],[1,2],[1,2]]"
+
+	err := json.Unmarshal([]byte(jsonStr), &a)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	result := numIslands2(3, 3, a)
+	fmt.Println(result)
+}
+
+//////////
+
 type UnionFind struct {
 	Count   int
 	parents []int
@@ -61,10 +79,10 @@ func NewUF(num int) *UnionFind {
 
 func (uf *UnionFind) find(index int) int {
 	if uf.parents[index] != index {
-		index = uf.parents[index]
+		//index = uf.parents[index]
 		uf.parents[index] = uf.find(uf.parents[index])
 	}
-	return index
+	return uf.parents[index]
 }
 
 func (uf *UnionFind) union(a, b int) {
@@ -72,36 +90,34 @@ func (uf *UnionFind) union(a, b int) {
 	if roota == rootb {
 		return
 	}
-	weightA := uf.weight[a]
-	weightB := uf.weight[b]
-	if weightA < weightB {
-		uf.parents[roota] = rootb
-		uf.weight[rootb] += uf.weight[roota]
-	} else {
-		uf.parents[rootb] = roota
-		uf.weight[roota] += uf.weight[rootb]
-	}
+	//weightA := uf.weight[a]
+	//weightB := uf.weight[b]
+	//if weightA < weightB {
+	uf.parents[roota] = rootb
+	//	uf.weight[rootb] += uf.weight[roota]
+	//} else {
+	//	uf.parents[rootb] = roota
+	//	uf.weight[roota] += uf.weight[rootb]
+	//}
 	uf.Count--
+
+	//rootA, rootB := uf.find(a), uf.find(b)
+	//if rootA == rootB {
+	//	return
+	//}
+	//if uf.weight[rootA] < uf.weight[rootB] {
+	//	uf.parents[rootA] = rootB
+	//	uf.weight[rootB] += uf.weight[rootA]
+	//} else {
+	//	uf.parents[rootB] = rootA
+	//	uf.weight[rootA] += uf.weight[rootB]
+	//}
+	//uf.Count--
+
 }
 
 func (uf *UnionFind) IsConnected(a, b int) bool {
 	return uf.find(a) == uf.find(b)
-}
-
-func TestNumIslands2() {
-	a := [][]int{}
-	//a = [][]int{{0, 0}, {0, 1}, {1, 2}, {2, 1}}
-	jsonStr := "[[0,1],[1,2],[2,1],[1,0],[0,2],[0,0],[1,1]]" // 对应结果：[1,2,3,4,3,2,1]
-
-	//jsonStr = "[[0,0],[0,1],[1,2],[1,2]]"
-
-	err := json.Unmarshal([]byte(jsonStr), &a)
-	if err != nil {
-		fmt.Println(err)
-	}
-
-	result := numIslands2(3, 3, a)
-	fmt.Println(result)
 }
 
 func numIslands2(m int, n int, positions [][]int) []int {
@@ -135,7 +151,7 @@ func numIslands2(m int, n int, positions [][]int) []int {
 			newX := x + direction[0]
 			newY := y + direction[1]
 			newIndex := newX*n + newY
-			if isInLand(newX, newY) && visited[newIndex] && !uf.IsConnected(index, newIndex) {
+			if isInLand(newX, newY) && visited[newIndex] && !uf.IsConnected(index, newIndex) { // 1,3
 				uf.union(index, newIndex)
 			}
 		}
@@ -144,6 +160,107 @@ func numIslands2(m int, n int, positions [][]int) []int {
 
 	return result
 }
+
+//type UF struct {
+//	count  int
+//	parent []int
+//	weight []int
+//}
+//
+//// 并查集模板
+//func NewUF(x int) *UF {
+//	u := UF{
+//		// 与模板不一样的地方：初始没有岛屿(题目要求初始都是海)
+//		count:  0,
+//		parent: make([]int, x),
+//		weight: make([]int, x),
+//	}
+//	for i := 0; i < x; i++ {
+//		u.parent[i] = i
+//		u.weight[i] = 1
+//	}
+//	return &u
+//}
+//
+//func (u *UF) Find(x int) int {
+//	for x != u.parent[x] {
+//		x = u.parent[x]
+//		u.parent[x] = u.parent[u.parent[x]]
+//	}
+//	return x
+//}
+//
+//func (u *UF) Union(a, b int) {
+//	rootA, rootB := u.Find(a), u.Find(b)
+//	if rootA == rootB {
+//		return
+//	}
+//	if u.weight[rootA] < u.weight[rootB] {
+//		u.parent[rootA] = rootB
+//		u.weight[rootB] += u.weight[rootA]
+//	} else {
+//		u.parent[rootB] = rootA
+//		u.weight[rootA] += u.weight[rootB]
+//	}
+//	u.count--
+//}
+//
+//func (u *UF) Connected(a, b int) bool {
+//	return u.Find(a) == u.Find(b)
+//}
+//
+//func (u *UF) Count() int {
+//	return u.count
+//}
+//
+//func (u *UF) Add() {
+//	u.count++
+//}
+//
+//func numIslands2(m int, n int, positions [][]int) []int {
+//	// 构造函数
+//	u := NewUF(m * n)
+//	// 二维变一维
+//	visited := make([]bool, m*n)
+//	// 保存最终结果
+//	var res []int
+//	// 检查当前坐标是否越界
+//	var inGrid = func(x, y int) bool {
+//		return x >= 0 && y >= 0 && x < m && y < n
+//	}
+//	// 四个方向
+//	direction := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+//
+//	for _, p := range positions {
+//		x, y := p[0], p[1]
+//		// 二维坐标转换成一维
+//		// 用 index=x∗n+y 表示 (x,y) 这个点。
+//		index := x*n + y
+//
+//		if visited[index] {
+//			res = append(res, u.Count())
+//			continue
+//		}
+//		// 未访问过
+//		visited[index] = true
+//		// 不相连岛屿数量+1
+//		u.Add()
+//		// 尝试在当前坐标(x,y)与四周(上下左右)进行连接
+//		// 观察四个方向是否有岛屿，且是否连接
+//		// 如果其中一个方向有已经填过的岛屿，且没有连接在一起
+//		// 那么就可以将填海位置与已经填过的岛屿连接在一起，同时孤岛数量-1(在Union里面自动做掉)
+//		for _, dir := range direction {
+//			X := x + dir[0]
+//			Y := y + dir[1]
+//			Index := X*n + Y
+//			if inGrid(X, Y) && visited[Index] && !u.Connected(index, Index) {
+//				u.Union(index, Index)
+//			}
+//		}
+//		res = append(res, u.Count())
+//	}
+//	return res
+//}
 
 ////////////
 
