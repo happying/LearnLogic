@@ -31,8 +31,8 @@ import (
 
 提示：
 
-1 <= m, n, positions.length <= 104
-1 <= m * n <= 104
+1 <= m, n, positions.length <= 10^4
+1 <= m * n <= 10^4
 positions[i].length == 2
 0 <= ri < m
 0 <= ci < n
@@ -41,12 +41,59 @@ positions[i].length == 2
 进阶：你可以设计一个时间复杂度 O(k log(mn)) 的算法解决此问题吗？（其中 k == positions.length）
 */
 
+type UnionFind struct {
+	Count   int
+	parents []int
+	weight  []int
+}
+
+func NewUF(num int) *UnionFind {
+	uf := &UnionFind{}
+	uf.parents = make([]int, num)
+	uf.weight = make([]int, num)
+	for i := 0; i < num; i++ {
+		uf.parents[i] = i
+		uf.weight[i] = 1
+	}
+
+	return uf
+}
+
+func (uf *UnionFind) find(index int) int {
+	if uf.parents[index] != index {
+		index = uf.parents[index]
+		uf.parents[index] = uf.find(uf.parents[index])
+	}
+	return index
+}
+
+func (uf *UnionFind) union(a, b int) {
+	roota, rootb := uf.find(a), uf.find(b)
+	if roota == rootb {
+		return
+	}
+	weightA := uf.weight[a]
+	weightB := uf.weight[b]
+	if weightA < weightB {
+		uf.parents[roota] = rootb
+		uf.weight[rootb] += uf.weight[roota]
+	} else {
+		uf.parents[rootb] = roota
+		uf.weight[roota] += uf.weight[rootb]
+	}
+	uf.Count--
+}
+
+func (uf *UnionFind) IsConnected(a, b int) bool {
+	return uf.find(a) == uf.find(b)
+}
+
 func TestNumIslands2() {
 	a := [][]int{}
 	//a = [][]int{{0, 0}, {0, 1}, {1, 2}, {2, 1}}
 	jsonStr := "[[0,1],[1,2],[2,1],[1,0],[0,2],[0,0],[1,1]]" // 对应结果：[1,2,3,4,3,2,1]
 
-	jsonStr = "[[0,0],[0,1],[1,2],[1,2]]"
+	//jsonStr = "[[0,0],[0,1],[1,2],[1,2]]"
 
 	err := json.Unmarshal([]byte(jsonStr), &a)
 	if err != nil {
@@ -58,7 +105,44 @@ func TestNumIslands2() {
 }
 
 func numIslands2(m int, n int, positions [][]int) []int {
-	return nil
+
+	uf := NewUF(m * n)
+	visited := make([]bool, m*n)
+	directions := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+	result := []int{}
+
+	isInLand := func(x, y int) bool {
+		if x >= 0 && y >= 0 && x < m && y < n {
+			return true
+		}
+		return false
+	}
+
+	for _, position := range positions {
+		x := position[0]
+		y := position[1]
+		index := x*n + y
+		//if !isInLand(x, y) {
+		//	continue
+		//}
+		if visited[index] {
+			result = append(result, uf.Count)
+			continue
+		}
+		visited[index] = true
+		uf.Count++
+		for _, direction := range directions {
+			newX := x + direction[0]
+			newY := y + direction[1]
+			newIndex := newX*n + newY
+			if isInLand(newX, newY) && visited[newIndex] && !uf.IsConnected(index, newIndex) {
+				uf.union(index, newIndex)
+			}
+		}
+		result = append(result, uf.Count)
+	}
+
+	return result
 }
 
 ////////////
