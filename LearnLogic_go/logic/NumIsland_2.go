@@ -79,7 +79,6 @@ func NewUF(num int) *UnionFind {
 
 func (uf *UnionFind) find(index int) int {
 	if uf.parents[index] != index {
-		//index = uf.parents[index]
 		uf.parents[index] = uf.find(uf.parents[index])
 	}
 	return uf.parents[index]
@@ -90,30 +89,16 @@ func (uf *UnionFind) union(a, b int) {
 	if roota == rootb {
 		return
 	}
-	//weightA := uf.weight[a]
-	//weightB := uf.weight[b]
-	//if weightA < weightB {
-	uf.parents[roota] = rootb
-	//	uf.weight[rootb] += uf.weight[roota]
-	//} else {
-	//	uf.parents[rootb] = roota
-	//	uf.weight[roota] += uf.weight[rootb]
-	//}
+	weightA := uf.weight[roota]
+	weightB := uf.weight[rootb]
+	if weightA < weightB {
+		uf.parents[roota] = rootb
+		uf.weight[rootb] += uf.weight[roota]
+	} else {
+		uf.parents[rootb] = roota
+		uf.weight[roota] += uf.weight[rootb]
+	}
 	uf.Count--
-
-	//rootA, rootB := uf.find(a), uf.find(b)
-	//if rootA == rootB {
-	//	return
-	//}
-	//if uf.weight[rootA] < uf.weight[rootB] {
-	//	uf.parents[rootA] = rootB
-	//	uf.weight[rootB] += uf.weight[rootA]
-	//} else {
-	//	uf.parents[rootB] = rootA
-	//	uf.weight[rootA] += uf.weight[rootB]
-	//}
-	//uf.Count--
-
 }
 
 func (uf *UnionFind) IsConnected(a, b int) bool {
