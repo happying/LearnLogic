@@ -46,13 +46,99 @@ positions[i].length == 2
 class NumIslands2 {
     
     class UnionFind {
-        var parents: [Int]
-        var weights: [Int]
+        var parents: [Int] = []
+        var weights: [Int] = []
         var count = 0
         
+        func NewUf(_ num:Int) -> UnionFind {
+            let newUf = UnionFind()
+            for index in 0..<num {
+                newUf.parents.append(index)
+                newUf.weights.append(1)
+            }
+            
+            return newUf
+        }
+        
+        func find(_ index: Int) ->Int {
+            if index != parents[index] {
+                return find(parents[index])
+            }
+            
+            return index
+        }
+        
+        func isConnected(a : Int,b :Int) -> Bool {
+            return find(a) == find(b)
+        }
+        
+        func connnect(a : Int,b :Int) {
+            let parentA = find(a)
+            let parentB = find(b)
+            let weightA = weights[parentA]
+            let weightB = weights[parentB]
+            count = count - 1
+            if weightA > weightB {
+                parents[parentB] = parentA
+                weights[parentB] = weightA + weightB
+            } else {
+                parents[parentA] = parentB
+                weights[parentA] = weightA + weightB
+            }
+        }
     }
     
+    func test()  {
+        let positions = [[0,0],[0,1],[1,2],[2,1]]
+        let result = numIslands2(3, 3, positions)
+        print(result)
+    }
+    
+    
     func numIslands2(_ m: Int, _ n: Int, _ positions: [[Int]]) -> [Int] {
-        return []
+        let uf = UnionFind().NewUf(m*n)
+        var visited = [Int:Int]()
+        let diretions = [[-1,0],[0,-1],[1,0],[0,1]]
+        var result = [Int]()
+        
+        for item in positions {
+            var mIndex = item[0]
+            var nIndex = item[1]
+            var p = mIndex*n + nIndex
+            
+            if !isInLand(m, n, mIndex, nIndex) {
+                result.append(uf.count)
+                continue
+            }
+            if visited[p] == 1 {
+                result.append(uf.count)
+                continue
+            }
+            visited[p] = 1
+            uf.count = uf.count + 1
+            for dire in diretions {
+                let newMIndex = mIndex + dire[0]
+                let newNIndex = nIndex + dire[1]
+                let newP = newMIndex * n + newNIndex
+                if !isInLand(m, n, newMIndex, newNIndex) {
+                    continue
+                }
+                if !uf.isConnected(a: p, b: newP) && visited[newP] == 1 {
+                    uf.connnect(a: p, b: newP)
+                }
+            }
+            result.append(uf.count)
+            
+        }
+        
+        
+        return result
+    }
+    
+    func isInLand(_ m: Int, _ n: Int, _ mIndex: Int, _ nIndex: Int) -> Bool {
+        if mIndex >= m || nIndex >= n || nIndex < 0 || mIndex <  0 {
+            return false
+        }
+        return true
     }
 }

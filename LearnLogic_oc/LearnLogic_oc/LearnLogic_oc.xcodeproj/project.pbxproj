@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		AD6E6C1D2BC2A14300CF9D2C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AD6E6C1C2BC2A14300CF9D2C /* main.m */; };
 		AD6E6C252BC4E5BC00CF9D2C /* LearnLogic.m in Sources */ = {isa = PBXBuildFile; fileRef = AD6E6C242BC4E5BC00CF9D2C /* LearnLogic.m */; };
+		AD7567462C66165B0023279B /* NumIsland2.m in Sources */ = {isa = PBXBuildFile; fileRef = AD7567452C66165B0023279B /* NumIsland2.m */; };
 		ADE404972BC63AC700F7570A /* ThreeSum.m in Sources */ = {isa = PBXBuildFile; fileRef = ADE404962BC63AC700F7570A /* ThreeSum.m */; };
 		ADE4049F2BC6BEBB00F7570A /* ThreeSumClosest.m in Sources */ = {isa = PBXBuildFile; fileRef = ADE4049E2BC6BEBB00F7570A /* ThreeSumClosest.m */; };
 		ADE404A22BC6C07600F7570A /* BaseTool.m in Sources */ = {isa = PBXBuildFile; fileRef = ADE404A12BC6C07600F7570A /* BaseTool.m */; };
@@ -32,6 +33,8 @@
 		AD6E6C1C2BC2A14300CF9D2C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		AD6E6C232BC4E5BC00CF9D2C /* LearnLogic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LearnLogic.h; sourceTree = "<group>"; };
 		AD6E6C242BC4E5BC00CF9D2C /* LearnLogic.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LearnLogic.m; sourceTree = "<group>"; };
+		AD7567442C66165B0023279B /* NumIsland2.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NumIsland2.h; sourceTree = "<group>"; };
+		AD7567452C66165B0023279B /* NumIsland2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NumIsland2.m; sourceTree = "<group>"; };
 		ADE404952BC63AC700F7570A /* ThreeSum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThreeSum.h; sourceTree = "<group>"; };
 		ADE404962BC63AC700F7570A /* ThreeSum.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ThreeSum.m; sourceTree = "<group>"; };
 		ADE4049D2BC6BEBB00F7570A /* ThreeSumClosest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThreeSumClosest.h; sourceTree = "<group>"; };
@@ -91,6 +94,8 @@
 				ADE404A12BC6C07600F7570A /* BaseTool.m */,
 				ADE404A52BC7E82100F7570A /* NumIsland.h */,
 				ADE404A62BC7E82100F7570A /* NumIsland.m */,
+				AD7567442C66165B0023279B /* NumIsland2.h */,
+				AD7567452C66165B0023279B /* NumIsland2.m */,
 			);
 			path = LearnLogic;
 			sourceTree = "<group>";
@@ -154,6 +159,7 @@
 			files = (
 				ADE404972BC63AC700F7570A /* ThreeSum.m in Sources */,
 				ADE404A72BC7E82100F7570A /* NumIsland.m in Sources */,
+				AD7567462C66165B0023279B /* NumIsland2.m in Sources */,
 				AD6E6C1D2BC2A14300CF9D2C /* main.m in Sources */,
 				ADE404A22BC6C07600F7570A /* BaseTool.m in Sources */,
 				ADE4049F2BC6BEBB00F7570A /* ThreeSumClosest.m in Sources */,

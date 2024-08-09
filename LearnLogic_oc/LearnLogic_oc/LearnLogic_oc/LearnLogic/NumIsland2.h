@@ -1,17 +1,15 @@
 //
-//  NumIsland.h
+//  NumIsland2.h
 //  LearnLogic_oc
 //
-//  Created by fisher on 2024/4/11.
+//  Created by fisher on 2024/8/9.
 //
 
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface NumIsland : NSObject
-
-- (void)testNumIsland;
+@interface NumIsland2 : NSObject
 
 @end
 

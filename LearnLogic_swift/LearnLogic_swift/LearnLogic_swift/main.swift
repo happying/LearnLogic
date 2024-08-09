@@ -18,7 +18,7 @@ import Foundation
 
 //ThreeSumClosest().test()
 
-NumIslands().test()
+NumIslands2().test()
 
 
 

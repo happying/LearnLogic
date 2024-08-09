@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ThreeSum.h"
+#import "NumIsland.h"
 
 NS_ASSUME_NONNULL_BEGIN
 

@@ -11,7 +11,8 @@
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...
-        [[[ThreeSum alloc] init] testThreeSum];
+//        [[[ThreeSum alloc] init] testThreeSum];
+        [[[NumIsland alloc] init] testNumIsland];
     }
     return 0;
 }
